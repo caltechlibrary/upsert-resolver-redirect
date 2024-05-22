@@ -2,7 +2,7 @@
 
 ## Usage
 
-From the [Upsert Resolver Redirect](https://github.com/caltechlibrary/upsert-resolver-redirect/actions/workflows/upsert.yml) Actions workflow page press the **Run workflow** dropdown button. In the form enter the required Resolver Key and Redirect URL. Then press the green **Run workflow** submit button.
+From the Upsert Resolver Redirect [workflow overview](https://github.com/caltechlibrary/upsert-resolver-redirect/actions/workflows/upsert.yml) page press the **Run workflow** dropdown button. In the form enter the required Resolver Key and Redirect URL. Then press the green **Run workflow** submit button.
 
 ### Example Use Case
 
