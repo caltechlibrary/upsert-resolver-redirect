@@ -1,0 +1,29 @@
+name: Upsert Resolver Redirect
+
+on:
+  workflow_dispatch:
+    inputs:
+      resolver_key:
+        description: "Resolver Key"
+        required: true
+        type: string
+      redirect_url:
+        description: "Redirect URL"
+        required: true
+        type: string
+
+jobs:
+  upsert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-west-2
+          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
+      - name: Set Redirect
+        run: |
+          aws s3api put-object \
+          --acl public-read \
+          --bucket ${{ vars.BUCKET }} \
+          --key ${{ inputs.resolver_key }} \
+          --website-redirect-location ${{ inputs.redirect_url }}
