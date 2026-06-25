@@ -20,7 +20,7 @@ jobs:
   upsert:
     runs-on: ubuntu-latest
     steps:
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@e7f100cf4c008499ea8adda475de1042d6975c7b #v6.2.0
         with:
           aws-region: us-west-2
           role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
