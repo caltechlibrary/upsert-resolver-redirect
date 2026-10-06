@@ -1,0 +1,50 @@
+name: Upsert Resolver Redirects From Search
+run-name: Redirects from ${{ inputs.search_url }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      search_url:
+        description: "CaltechAUTHORS search URL"
+        required: true
+        type: string
+      dry_run:
+        description: "Only list redirects, don't update them"
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  upsert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find Resolver IDs
+        env:
+          SEARCH_URL: ${{ inputs.search_url }}
+        run: |
+          python3 rdm_resolver_ids.py "$SEARCH_URL" > redirects.tsv
+          echo "Found $(wc -l < redirects.tsv) resolver IDs"
+          cat redirects.tsv
+      - uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c #v6.2.4
+        if: ${{ !inputs.dry_run }}
+        with:
+          aws-region: us-west-2
+          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
+      - name: Set Redirects
+        if: ${{ !inputs.dry_run }}
+        env:
+          BUCKET: ${{ vars.BUCKET }}
+        run: |
+          while IFS=$'\t' read -r key url; do
+            echo "$key -> $url"
+            aws s3api put-object \
+            --acl public-read \
+            --bucket "$BUCKET" \
+            --key "$key" \
+            --website-redirect-location "$url" > /dev/null
+          done < redirects.tsv
