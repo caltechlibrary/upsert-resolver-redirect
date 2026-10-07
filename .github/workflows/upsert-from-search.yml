@@ -43,7 +43,6 @@ jobs:
           while IFS=$'\t' read -r key url; do
             echo "$key -> $url"
             aws s3api put-object \
-            --acl public-read \
             --bucket "$BUCKET" \
             --key "$key" \
             --website-redirect-location "$url" > /dev/null

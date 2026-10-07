@@ -27,7 +27,6 @@ jobs:
       - name: Set Redirect
         run: |
           aws s3api put-object \
-          --acl public-read \
           --bucket ${{ vars.BUCKET }} \
           --key ${{ inputs.resolver_key }} \
           --website-redirect-location ${{ inputs.redirect_url }}
